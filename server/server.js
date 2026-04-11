@@ -18,8 +18,10 @@ app.use(clerkMiddleware())
 
 
 //API to listen to clerk webhooks
-app.use("/api/clerk",clerkWebHooks)
+app.post("/api/clerk",clerkWebHooks)
 
 app.get('/',(req,res)=>res.send("API is working...."))
 const PORT= process.env.PORT || 3000;
-app.listen(PORT, ()=> console.log (`Server Runnning on Port ${PORT}`))
+// app.listen(PORT, ()=> console.log (`Server Runnning on Port ${PORT}`))
+
+export default app
