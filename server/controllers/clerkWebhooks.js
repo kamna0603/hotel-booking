@@ -1,10 +1,11 @@
 import User from "../models/User.js"
-import {webhook} from "svix";
+import pkg from "svix"
+const { Webhook } = pkg
 
 const clerkWebHooks= async(req,res)=>{
     try {
         //create a svix instance with clerk webhook secret.
-        const whook = new webhook(process.env.CLERK_WEBHOOK_SECRET)
+        const whook = new Webhook(process.env.CLERK_WEBHOOK_SECRET)
         //getting headers
         const headers={
             "svix-id" : req.headers["svix-id"],
@@ -27,15 +28,15 @@ const clerkWebHooks= async(req,res)=>{
     //switch cases for different events
     switch(type){
         case "user.created":{
-            await User.create(UserData)
+            await User.create(userData)
             break;
         }
          case "user.updated":{
-            await User.findByIdAndUpdate(data._id,UserData)
+            await User.findByIdAndUpdate(data.id,userData)
             break;
         }
          case "user.deleted":{
-            await User.findByIdAndDelete(data._id)
+            await User.findByIdAndDelete(data.id)
             break;
         }
           default:break;
