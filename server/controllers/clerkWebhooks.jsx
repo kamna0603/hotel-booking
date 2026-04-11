@@ -38,16 +38,17 @@ const clerkWebHooks= async(req,res)=>{
             await User.findByIdAndDelete(data._id)
             break;
         }
-default:break;
+          default:break;
     }
 
     res.json({success:true,
-        message:"webhook Received"
+        message:"Webhook Received"
     })
 
     } catch (error) {
         console.log(error.message);
-        res.json({success:true,
+        res.json({
+            success:true,
             message:error.message
         });
     }
