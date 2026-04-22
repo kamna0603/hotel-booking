@@ -18,7 +18,8 @@ const userSchema=mongoose.Schema({
     },
     role:{
          type:String,
-        enum:["user","owner"],deafult:"user"
+        enum:["user","hotelOwner"],
+        default:"user"
     },
     recentSearchedCities:[{ type:String,
         required:true}],

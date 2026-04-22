@@ -1,9 +1,36 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Title from "../../components/Title";
-import { assets, dashboardDummyData } from "../../assets/assets";
+import { assets} from "../../assets/assets";
+import { useAppContext } from "../../context/AppContext";
 
 const Dashboard = () => {
-  const [dashboardData, setDashboardData] = useState(dashboardDummyData);
+  const {currrency,user,getToken,toast,axios}=useAppContext()
+  const [dashboardData, setDashboardData] = useState({
+    bookings:[],
+    totalBookings:0,
+    totalRevenue:0,
+  });
+
+  const fetchDashboardData = async () => {
+    try {
+          const {data} = await axios.get('/api/bookings/hotel',{headers:{Authorization:`Bearer ${await getToken()}`}})
+if(data.success){
+  setDashboardData(data.dashboardData)
+}
+else{
+  toast.error(data.message)
+}
+    } catch (error) {
+       toast.error(error.message)
+    }
+  }
+
+  useEffect(()=>{
+    if(user){
+      fetchDashboardData();
+    }
+  },[user])
+
   return (
     <div className="pb-20">
       <Title
@@ -39,7 +66,7 @@ const Dashboard = () => {
             <p className="text-blue-500 text-lg">Total Revenue</p>
             <p className="text-neutral-400 text-base">
               {" "}
-              $ {dashboardData.totalRevenue}
+              {currrency} {dashboardData.totalRevenue}
             </p>
           </div>
         </div>
@@ -83,7 +110,7 @@ const Dashboard = () => {
           </td>
 
           <td className="py-3 px-4 text-gray-700 text-center">
-            ${item.totalPrice}
+            {currrency} {item.totalPrice}
           </td>
 
           <td className="py-3 px-4 text-center">

@@ -1,8 +1,13 @@
 import React ,{ useState} from 'react'
 import { assets } from '../../assets/assets'
 import Title from '../../components/Title'
+import {useAppContext} from "../../context/AppContext.jsx"
+import toast from 'react-hot-toast'
+
 
 const AddRoom = () => {
+const {axios,getToken}= useAppContext()
+
   const [images,setImages]= useState({
     1:null,
     2:null,
@@ -22,8 +27,66 @@ const AddRoom = () => {
 
     }
   })
+
+  const[loading,setLoading]= useState(false);
+
+  const onSubmitHandler = async(e)=>{
+    e.preventDefault();
+    //Check if All inputs are filled
+    if(!inputs.roomType || !inputs.pricePerNight || !inputs.amenities || 
+      !Object.values(images).some(image=>image)
+    ){
+      toast.error("Please Fill in All Details...!!")
+      return;
+    }
+    setLoading(true);
+    try {
+      const formData= new FormData()
+      formData.append('roomType',inputs.roomType)
+      formData.append('pricePerNight',Number(inputs.pricePerNight))
+    // converting amenities to arrays & keeping only enabled Amenities
+    const amenities = Object.keys(inputs.amenities).filter(key=>inputs.amenities[key])
+    formData.append('amenities',JSON.stringify(amenities))
+
+//Adding Images to FormData
+Object.keys(images).forEach((key)=>{
+  images[key] && formData.append('images',images[key])
+})
+ const {data} =await axios.post('/api/rooms/', formData,
+  {headers:{Authorization:`Bearer ${await getToken()}`}}
+ )
+
+ if(data.success){
+  toast.success(data.message)
+  setInputs({
+    roomType: '',
+    pricePerNight:0,
+    amenities:{
+       'Free Wifi':false,
+      'Free Breakfast':false,
+      'Room Service':false,
+      'Mountain View':false,
+      'Pool Access':false
+    }
+  })
+
+  setImages({1:null,  2:null, 3:null,4:null})
+ }else{
+  toast.error(data.message)
+ }
+
+    } catch (error) {
+      toast.error(error.message)
+    }
+    finally{
+      setLoading(false);
+    }
+
+  }
+
     return (
-    <form className="min-h-screen pb-20 px-4 sm:px-6 lg:px-8">
+    <form onSubmit={onSubmitHandler}
+    className="min-h-screen pb-20 px-4 sm:px-6 lg:px-8">
 <Title title="Add Room" align="left" font="outfit" subTitle="Fill in the details carefully and accurate room details, pricing, and amenities ,to enhance the user boookin experience.."/>
 {/* Upload area for Images */}
 <p className='text-gray-800 mt-10'>Images</p>
@@ -69,7 +132,9 @@ value={inputs.roomType}
   </div>
 ))}
 </div>
-<button className='bg-blue-500 text-white px-8 py-2 rounded mt-8 cursor-pointer '>Add Room</button>
+<button disabled={loading} className='bg-blue-500 text-white px-8 py-2 rounded mt-8 cursor-pointer '>
+ {loading ?'Adding...': " Add Room"}
+  </button>
     </form>
   )
 }
