@@ -5,6 +5,7 @@ import { getAuth } from "@clerk/express";
 //Middleware to check if user is authenticated
 export const protect = async (req, res, next) => {
     try {
+         await connectDB();
          const token = req.headers.authorization?.split(" ")[1];
     console.log("Token received:", token ? "YES" : "NO");  // 👈
     console.log("Token value:", token?.substring(0, 20));  
@@ -15,7 +16,7 @@ export const protect = async (req, res, next) => {
             return res.status(401).json({ success: false, message: "Not Authenticated" });
         }
 
-const user = await User.findOne({ clerkId: userId });       
+const user = await User.findOne(userId );       
   if (!user) {
             return res.status(401).json({ success: false, message: "User not found" });
         }
