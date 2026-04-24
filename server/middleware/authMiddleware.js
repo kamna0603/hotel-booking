@@ -7,8 +7,9 @@ export const protect = async (req, res, next) => {
         console.log("DB connected");
         
         const { userId } = getAuth(req);
-        console.log("userId:", userId); // 👈 add this
-        
+        console.log("userId:", userId); 
+        console.log("auth object:", getAuth(req)); // 👈 what does full auth look like
+
         if (!userId) {
             return res.status(401).json({ success: false, message: "Not Authenticated" });
         }
