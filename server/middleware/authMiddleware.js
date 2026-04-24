@@ -15,8 +15,8 @@ export const protect = async (req, res, next) => {
             return res.status(401).json({ success: false, message: "Not Authenticated" });
         }
 
-        const user = await User.findById(userId);
-        if (!user) {
+const user = await User.findOne({ clerkId: userId });       
+  if (!user) {
             return res.status(401).json({ success: false, message: "User not found" });
         }
 
