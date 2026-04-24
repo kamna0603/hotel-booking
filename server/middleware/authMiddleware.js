@@ -1,3 +1,6 @@
+import User from "../models/User.js";
+import { getAuth } from "@clerk/express";
+import connectDB from "../configs/db.js";
 export const protect = async (req, res, next) => {
     try {
         await connectDB();
