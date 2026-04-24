@@ -1,6 +1,6 @@
 import User from "../models/User.js";
 import { getAuth } from "@clerk/express"; 
-
+import connectDB from "../configs/db.js"
 
 //Middleware to check if user is authenticated
 export const protect = async (req, res, next) => {
