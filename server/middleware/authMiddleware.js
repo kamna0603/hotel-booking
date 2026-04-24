@@ -1,35 +1,26 @@
-import User from "../models/User.js";
-import { getAuth } from "@clerk/express"; 
-import connectDB from "../configs/db.js"
-
-//Middleware to check if user is authenticated
 export const protect = async (req, res, next) => {
     try {
-         await connectDB();
-         const token = req.headers.authorization?.split(" ")[1];
-    console.log("Token received:", token ? "YES" : "NO");  // 👈
-    console.log("Token value:", token?.substring(0, 20));  
-        const auth = getAuth(req);
-    const { userId } = auth;
-  
+        await connectDB();
+        console.log("DB connected");
+        
+        const { userId } = getAuth(req);
+        console.log("userId:", userId); // 👈 add this
+        
         if (!userId) {
             return res.status(401).json({ success: false, message: "Not Authenticated" });
         }
 
-const user = await User.findOne(userId );       
-  if (!user) {
+        const user = await User.findOne({ clerkId: userId });
+        console.log("user found:", user ? "YES" : "NO"); // 👈 add this
+        
+        if (!user) {
             return res.status(401).json({ success: false, message: "User not found" });
         }
 
         req.user = user;
         next();
-
     } catch (error) {
-        console.log("PROTECT ERROR:", error);
+        console.log("PROTECT ERROR:", error.message); // 👈 change to error.message
         return res.status(500).json({ success: false, message: "Auth error" });
     }
 };
-
-
-
-
