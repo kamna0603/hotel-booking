@@ -19,10 +19,9 @@ connectCloudinary();
 const app=express()
 // enable cross-origin resource sharing
 app.use(cors({
-  origin: "http://localhost:5173",
+  origin: ["http://localhost:5173", "https://hotel-booking-ty37.vercel.app"],
   credentials: true
 }));
-
 
 //Middleware
 app.use(express.json())
