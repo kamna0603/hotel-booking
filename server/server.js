@@ -26,9 +26,13 @@ app.use(cors({
 
 //Middleware
 app.use(express.json())
-app.use(clerkMiddleware())
-// server.js — temporary, add before routes
-// 
+app.use(clerkMiddleware({
+  authorizedParties: [
+    'http://localhost:5173',
+    'https://hotel-booking-ty37.vercel.app'
+  ]
+}))
+
 
 //API to listen to clerk webhooks
 app.post("/api/clerk",clerkWebHooks)

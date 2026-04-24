@@ -6,8 +6,9 @@ import { getAuth } from "@clerk/express";
 export const protect = async (req, res, next) => {
     try {
         const auth = getAuth(req);
-        const { userId } = auth;
-
+    
+const { userId } = auth;
+  
         if (!userId) {
             return res.status(401).json({ success: false, message: "Not Authenticated" });
         }
