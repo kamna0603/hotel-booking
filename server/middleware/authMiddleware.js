@@ -8,7 +8,7 @@ export const protect = async (req, res, next) => {
         
         const { userId } = getAuth(req);
         console.log("userId:", userId); 
-        console.log("auth object:", getAuth(req)); // 👈 what does full auth look like
+    console.log("auth:", JSON.stringify(getAuth(req)));
 
         if (!userId) {
             return res.status(401).json({ success: false, message: "Not Authenticated" });
@@ -23,7 +23,7 @@ const user = await User.findOne({ _id: userId });
         req.user = user;
         next();
     } catch (error) {
-        console.log("PROTECT ERROR:", error.message); // 👈 change to error.message
+        console.log("PROTECT ERROR:", error.message); 
         return res.status(500).json({ success: false, message: "Auth error" });
     }
 };

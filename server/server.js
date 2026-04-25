@@ -28,8 +28,10 @@ app.use(express.json())
 app.use(clerkMiddleware({
   authorizedParties: [
     'http://localhost:5173',
-    'https://hotel-booking-ty37.vercel.app'
-  ]
+    'https://hotel-booking-ty37.vercel.app',
+    'https://quickstay-rust.vercel.app'
+  ],
+   credentials: true
 }))
 
 
